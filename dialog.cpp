@@ -13,42 +13,34 @@ Dialog::Dialog(QWidget *parent) :
     connect(ui->clear, &QPushButton::clicked, this, &Dialog::clicedClear);
     ui->ed_time->setReadOnly(true);
     ui->round->setEnabled(false);
-
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Dialog::timeLine);
-
 }
 void Dialog::toggleStart(bool checked){
+    StopWatch* stopWatch = new StopWatch(this);
 
-    // StopWatch* stopWatch = new StopWatch(this);
-    //setTime (stopWatch->getTime());
-    // qDebug() << currentTime << stopWatch->getTime() ;
-
-
-    str_time = QString("Время: %1 секунд").arg(currentTime) ;
+    currentTime = stopWatch->getTime(); // В любом случае присваивается лишь первый раз, не могу понять в чем дело
+   // str_time = stopWatch->getTimeString();// /--/
+    str_time =  QString("Время: %1 секунд").arg(currentTime) ;
+    qDebug() << currentTime;
+    //qDebug() << str_time <<currentTime  << stopWatch->getTime() ;
     ui->label->setText(str_time);
 
    if(checked == true){
      ui->start->setText("Стоп");
-    // stopWatch->start();
-     timer->start(100);
+     stopWatch->start();
      ui->round->setEnabled(true);
    }
    else{
        ui->start->setText("Старт");
-      // stopWatch->stop();
-       timer->stop();
+       stopWatch->stop();
        ui->round->setEnabled(false);
    }
 };
 void Dialog::timeLine(){
-    currentTime += 0.1;
-    str_time = QString("Время: %1 секунд").arg(currentTime) ;
-    ui->label->setText(str_time);
-
 };
 
 void Dialog::clicedRound(){
+    StopWatch* stopWatch = new StopWatch(this);
+        currentTime = stopWatch->getTime();
         currentRound = currentTime;
         currentTime = 0;
         numberRound++;
@@ -61,7 +53,7 @@ void Dialog::clicedClear(){
     ui->label->setText(QString("Время: "));
     numberRound = 0;
     currentTime = 0;
-    //stopWatch->reset();
+    stopWatch->reset();
 
 }
 

@@ -19,7 +19,7 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = nullptr);
     ~Dialog();
-    void setTime(double time){ currentTime = time;};
+
 
 Q_SIGNALS:
     void signalToggleStart(bool checked);
@@ -37,35 +37,45 @@ private:
      double currentTime = 0;
      double currentRound = 0;
      int numberRound = 0;
-    QTimer* timer;
 
     Ui::Dialog *ui;
 };
+
 //Пытался реализовать класс, но он передает только первое значение, в дебаге все хорошо, я не понимаю почему он не обновляет значение.
 //Может я не правильно понял задание.
-class StopWatch : public QObject{
+
+class StopWatch : public Dialog{
     Q_OBJECT
 public:
-    StopWatch(QObject *parent = nullptr): QObject(parent){
-       // timer = new QTimer(this);
-        //connect(timer, &QTimer::timeout, this, &StopWatch::upTime);
-        //timer->setInterval(100);
+    StopWatch(Dialog *parent = nullptr): Dialog(parent){
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, &StopWatch::upTime);
+        timer->setInterval(100);
     };
-    //void start(){timer->start(100);};
-    //void stop (){timer->stop();};
-   // void reset (){time = 0;};
-    double getTime() const{
+    void start(){ timer->start(100); };
+    void stop (){ timer->stop(); };
+    void reset (){ time = 0; };
+
+    QString getTimeString() const{
+        //qDebug() <<  timeString << time ;
+        return timeString;
+    }
+    double getTime() const {
         return time;
     }
+      double time = 0 ;
 public slots:
-    double upTime(){
+    void upTime(){
         time += 0.1;
-      // qDebug() << "время "<< time ;
-       return time;
+
+        timeString = QString("Время: %1 секунд").arg(time) ;
+       qDebug() <<  timeString << time ;
+
 }
 private:
-    double time = 0 ;
-    //QTimer* timer;
+
+    QString timeString;
+    QTimer* timer;
 };
 
 #endif // DIALOG_H
