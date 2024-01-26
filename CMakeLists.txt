@@ -22,7 +22,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(home_work
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        dialog.h dialog.cpp dialog.ui
+        dialog.h dialog.cpp dialog.ui stopwatch.h
     )
 
 # Define target properties for Android with Qt 6 as:
